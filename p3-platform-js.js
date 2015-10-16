@@ -113,11 +113,11 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 											"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
 											"PREFIX fp3: <http://vocab.fusepool.info/fp3#> " +
 											"SELECT * { " +
-											" ?s dcterms:title ?title . " +
-											" ?s rdfs:comment ?comment . " +
-											" ?s rdfs:label ?label . " +
+//											" ?s dcterms:title ?title . " +
+//											" ?s rdfs:comment ?comment . " +
+//											" ?s rdfs:label ?label . " +
 											" ?s fp3:sparqlEndpoint ?sparqlEndpoint . " +
-											" ?s fp3:userInteractionRegistry ?userInteractionRegistry . " +
+											" ?s fp3:irLDPC ?userInteractionRegistry . " +
 											" ?s fp3:transformerFactoryRegistry ?transformerFactoryRegistry . " +
 											" ?s fp3:transformerRegistry ?transformerRegistry . " +
 											" ?s fp3:dashboardConfigRegistry ?dashboardConfigRegistry . " +
@@ -125,9 +125,9 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 					
 					configStore.execute(query, function (success, res) {
 						if (success) {
-							var title = res[0].title.value;
-							var comment = res[0].comment.value;
-							var label = res[0].label.value;
+							var title = "title";//res[0].title.value;
+							var comment = "comment";//res[0].comment.value;
+							var label = "label"; //res[0].label.value;
 							var sparqlEndpoint = res[0].sparqlEndpoint.value;
 							var userInteractionRegistry = res[0].userInteractionRegistry.value;
 							var transformerFactoryRegistry = res[0].transformerFactoryRegistry.value;
