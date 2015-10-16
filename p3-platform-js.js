@@ -43,29 +43,28 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 		this.URI = transformerRegistryURI;
 	}
 	TransformerRegistry.prototype.registerTransformer = function (transformerURI, title) {
+		var main = this;
+		return new Promise(function (resolve, reject) {
 
-		var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
-						+ '@prefix trldpc: <http://vocab.fusepool.info/trldpc#> . '
-						+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
-						+ '<> a ldp:Container, ldp:BasicContainer, trldpc:TransformerRegistration; '
-						+ 'trldpc:transformer <' + transformerURI + '>; '
-						+ 'dcterms:title "' + title + '"@en; '
-						+ 'dcterms:description "" . ';
+			var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
+							+ '@prefix trldpc: <http://vocab.fusepool.info/trldpc#> . '
+							+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
+							+ '<> a ldp:Container, ldp:BasicContainer, trldpc:TransformerRegistration; '
+							+ 'trldpc:transformer <' + transformerURI + '>; '
+							+ 'dcterms:title "' + title + '"@en; '
+							+ 'dcterms:description "" . ';
 
-		$.ajax({
-				type: 'POST',
-				headers: {
-						'Content-Type': 'text/turtle',
-						'Link': '<http://www.w3.org/ns/ldp#BasicContainer>; rel=?type?'
-				},
-				url: this.URI,
-				data: data
-		}).done(function (response) {
-			return true;
-			//todo
-		}).fail(function (xhr, textStatus, errorThrown) {
-			return false;
-			//console.error(xhr, textStatus, errorThrown);
+			$.ajax({
+					type: 'POST',
+					headers: { 'Content-Type': 'text/turtle' },
+					url: main.URI,
+					data: data,
+					async: true
+			}).done(function (response) {
+				resolve(true);
+			}).fail(function (xhr, textStatus, errorThrown) {
+				reject(Error("error " + xhr.status));
+			});
 		});
 	};
 	
@@ -74,29 +73,28 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 		this.URI = transformerFactoryRegistryURI;
 	}
 	TransformerFactoryRegistry.prototype.registerTransformerFactory = function (transformerFactoryURI, title) {
+		var main = this;
+		return new Promise(function (resolve, reject) {
 
-		var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
-						+ '@prefix tfrldpc: <http://vocab.fusepool.info/tfrldpc#> . '
-						+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
-						+ '<> a ldp:Container, ldp:BasicContainer, tfrldpc:TransformerFactoryRegistration; '
-						+ 'tfrldpc:transformerFactory <' + transformerFactoryURI + '>; '
-						+ 'dcterms:title "' + title + '"@en; '
-						+ 'dcterms:description "" . ';
+			var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
+							+ '@prefix tfrldpc: <http://vocab.fusepool.info/tfrldpc#> . '
+							+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
+							+ '<> a ldp:Container, ldp:BasicContainer, tfrldpc:TransformerFactoryRegistration; '
+							+ 'tfrldpc:transformerFactory <' + transformerFactoryURI + '>; '
+							+ 'dcterms:title "' + title + '"@en; '
+							+ 'dcterms:description "" . ';
 
-		$.ajax({
-				type: 'POST',
-				headers: {
-						'Content-Type': 'text/turtle',
-						'Link': '<http://www.w3.org/ns/ldp#BasicContainer>; rel=?type?'
-				},
-				url: this.URI,
-				data: data
-		}).done(function (response) {
-			return true;
-			//todo
-		}).fail(function (xhr, textStatus, errorThrown) {
-			return false;
-			//console.error(xhr, textStatus, errorThrown);
+			$.ajax({
+					type: 'POST',
+					headers: { 'Content-Type': 'text/turtle' },
+					url: main.URI,
+					data: data,
+					async: true
+			}).done(function (response) {
+				resolve(true);
+			}).fail(function (xhr, textStatus, errorThrown) {
+				reject(Error("error " + xhr.status));
+			});
 		});
 	};
 
@@ -140,17 +138,15 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							var platform = new Platform(platformURI, title, comment, label, sparqlEndpoint,
 																				userInteractionRegistry, transformerFactoryRegistryObj,
 																				transformerRegistryObj, dashboardConfigRegistry);
-														
+							
 							resolve(platform);
 						}
 						else {
-							console.log("RDFStore issue during executing a query.");
 							reject(Error("RDFStore issue during executing a query."));
 						}
 					});
 				}
 				else {
-					console.log("RDFStore issue during loading result to store.");
 					reject(Error("RDFStore issue during loading result to store."));
 				}
 			});
