@@ -8,20 +8,20 @@ function P3Platform() {
 P3Platform.prototype.getPlatform = function (platformURI) {
 
 	/* ************************* Platform ************************* */
-	function Platform(URI, title, comment, label, sparqlEndpoint, userInteractionRegistry, transformerFactoryRegistry, transformerRegistry, dashboardConfigRegistry) {
+	function Platform(URI, title, comment, label, sparqlEndpoint, userInteractionRequestRegistry, transformerFactoryRegistry, transformerRegistry, dashboardConfigRegistry) {
 		this.URI = URI;
 		this.title = title;
 		this.comment = comment;
 		this.label = label;
 		this.sparqlEndpoint = sparqlEndpoint;
-		this.userInteractionRegistry = userInteractionRegistry;
+		this.userInteractionRequestRegistry = userInteractionRequestRegistry;
 		this.transformerFactoryRegistry = transformerFactoryRegistry;
 		this.transformerRegistry = transformerRegistry;
 		this.dashboardConfigRegistry = dashboardConfigRegistry;
 	}
 	Platform.prototype.getPlatformURI = function () { return this.URI; };
 	Platform.prototype.getSparqlEndpoint = function () { return this.sparqlEndpoint; };
-	Platform.prototype.getUserInteractionRegistryURI = function () { return this.userInteractionRegistry; };
+	Platform.prototype.getUserInteractionRegistryURI = function () { return this.userInteractionRequestRegistry; };
 	Platform.prototype.getTransformerFactoryRegistry = function () {
 		var main = this;
     return new Promise(function (resolve, reject) {
@@ -115,7 +115,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 											" ?s rdfs:comment ?comment . " +
 											" ?s rdfs:label ?label . " +
 											" ?s fp3:sparqlEndpoint ?sparqlEndpoint . " +
-											" ?s fp3:userInteractionRegistry ?userInteractionRegistry . " +
+											" ?s fp3:userInteractionRequestRegistry ?userInteractionRequestRegistry . " +
 											" ?s fp3:transformerFactoryRegistry ?transformerFactoryRegistry . " +
 											" ?s fp3:transformerRegistry ?transformerRegistry . " +
 											" ?s fp3:dashboardConfigRegistry ?dashboardConfigRegistry . " +
@@ -127,7 +127,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							var comment = res[0].comment.value;
 							var label = res[0].label.value;
 							var sparqlEndpoint = res[0].sparqlEndpoint.value;
-							var userInteractionRegistry = res[0].userInteractionRegistry.value;
+							var userInteractionRequestRegistry = res[0].userInteractionRequestRegistry.value;
 							var transformerFactoryRegistry = res[0].transformerFactoryRegistry.value;
 							var transformerRegistry = res[0].transformerRegistry.value;
 							var dashboardConfigRegistry = res[0].dashboardConfigRegistry.value;
@@ -136,7 +136,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							var transformerFactoryRegistryObj = new TransformerFactoryRegistry(transformerFactoryRegistry);
 							
 							var platform = new Platform(platformURI, title, comment, label, sparqlEndpoint,
-																				userInteractionRegistry, transformerFactoryRegistryObj,
+																				userInteractionRequestRegistry, transformerFactoryRegistryObj,
 																				transformerRegistryObj, dashboardConfigRegistry);
 							
 							resolve(platform);
