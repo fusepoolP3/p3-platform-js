@@ -21,7 +21,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 	}
 	Platform.prototype.getPlatformURI = function () { return this.URI; };
 	Platform.prototype.getSparqlEndpoint = function () { return this.sparqlEndpoint; };
-	Platform.prototype.getUserInteractionRegistryURI = function () { return this.userInteractionRequestRegistry; };
+	Platform.prototype.getUserInteractionRequestRegistryURI = function () { return this.userInteractionRequestRegistry; };
 	Platform.prototype.getTransformerFactoryRegistry = function () {
 		var main = this;
     return new Promise(function (resolve, reject) {
@@ -42,7 +42,13 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 	function TransformerRegistry(transformerRegistryURI) {
 		this.URI = transformerRegistryURI;
 	}
-	TransformerRegistry.prototype.registerTransformer = function (transformerURI, title) {
+	TransformerRegistry.prototype.registerTransformer = function (transformerURI, title, description) {
+		
+		var descriptionProp = "";
+		if(typeof description !== 'undefined') {
+			descriptionProp = 'dcterms:description "' + description + '" ; ';
+		}
+		
 		var main = this;
 		return new Promise(function (resolve, reject) {
 
@@ -51,8 +57,8 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
 							+ '<> a ldp:Container, ldp:BasicContainer, trldpc:TransformerRegistration; '
 							+ 'trldpc:transformer <' + transformerURI + '>; '
-							+ 'dcterms:title "' + title + '"@en; '
-							+ 'dcterms:description "" . ';
+							+ descriptionProp
+							+ 'dcterms:title "' + title + '"@en . ';
 
 			$.ajax({
 					type: 'POST',
@@ -72,7 +78,13 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 	function TransformerFactoryRegistry(transformerFactoryRegistryURI) {
 		this.URI = transformerFactoryRegistryURI;
 	}
-	TransformerFactoryRegistry.prototype.registerTransformerFactory = function (transformerFactoryURI, title) {
+	TransformerFactoryRegistry.prototype.registerTransformerFactory = function (transformerFactoryURI, title, description) {
+		
+		var descriptionProp = "";
+		if(typeof description !== 'undefined') {
+			descriptionProp = 'dcterms:description "' + description + '" ; ';
+		}
+		
 		var main = this;
 		return new Promise(function (resolve, reject) {
 
@@ -81,8 +93,8 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
 							+ '<> a ldp:Container, ldp:BasicContainer, tfrldpc:TransformerFactoryRegistration; '
 							+ 'tfrldpc:transformerFactory <' + transformerFactoryURI + '>; '
-							+ 'dcterms:title "' + title + '"@en; '
-							+ 'dcterms:description "" . ';
+							+ descriptionProp
+							+ 'dcterms:title "' + title + '"@en . ';
 
 			$.ajax({
 					type: 'POST',
