@@ -44,33 +44,39 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 	}
 	TransformerRegistry.prototype.registerTransformer = function (transformerURI, title, description) {
 		
-		var descriptionProp = "";
-		if(typeof description !== 'undefined') {
-			descriptionProp = 'dcterms:description "' + description + '" ; ';
-		}
-		
 		var main = this;
 		return new Promise(function (resolve, reject) {
+		
+			if(!isEmpty(transformerURI)) {
+				
+				var descriptionProp = "";
+				if(typeof description !== 'undefined') {
+					descriptionProp = 'dcterms:description "' + description + '" ; ';
+				}
 
-			var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
-							+ '@prefix trldpc: <http://vocab.fusepool.info/trldpc#> . '
-							+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
-							+ '<> a ldp:Container, ldp:BasicContainer, trldpc:TransformerRegistration; '
-							+ 'trldpc:transformer <' + transformerURI + '>; '
-							+ descriptionProp
-							+ 'dcterms:title "' + title + '"@en . ';
+				var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
+								+ '@prefix trldpc: <http://vocab.fusepool.info/trldpc#> . '
+								+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
+								+ '<> a ldp:Container, ldp:BasicContainer, trldpc:TransformerRegistration; '
+								+ 'trldpc:transformer <' + transformerURI + '>; '
+								+ descriptionProp
+								+ 'dcterms:title "' + title + '"@en . ';
 
-			$.ajax({
-					type: 'POST',
-					headers: { 'Content-Type': 'text/turtle' },
-					url: main.URI,
-					data: data,
-					async: true
-			}).done(function (response) {
-				resolve(true);
-			}).fail(function (xhr, textStatus, errorThrown) {
-				reject(Error("error " + xhr.status));
-			});
+				$.ajax({
+						type: 'POST',
+						headers: { 'Content-Type': 'text/turtle' },
+						url: main.URI,
+						data: data,
+						async: true
+				}).done(function (response) {
+					resolve(true);
+				}).fail(function (xhr, textStatus, errorThrown) {
+					reject(Error("error " + xhr.status));
+				});
+			}
+			else {
+					reject(Error("Invalid Transformer Registry."));
+			}
 		});
 	};
 	
@@ -80,40 +86,46 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 	}
 	TransformerFactoryRegistry.prototype.registerTransformerFactory = function (transformerFactoryURI, title, description) {
 		
-		var descriptionProp = "";
-		if(typeof description !== 'undefined') {
-			descriptionProp = 'dcterms:description "' + description + '" ; ';
-		}
-		
 		var main = this;
 		return new Promise(function (resolve, reject) {
+		
+			if(!isEmpty(transformerFactoryURI)) {
+				
+				var descriptionProp = "";
+				if(typeof description !== 'undefined') {
+					descriptionProp = 'dcterms:description "' + description + '" ; ';
+				}
 
-			var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
-							+ '@prefix tfrldpc: <http://vocab.fusepool.info/tfrldpc#> . '
-							+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
-							+ '<> a ldp:Container, ldp:BasicContainer, tfrldpc:TransformerFactoryRegistration; '
-							+ 'tfrldpc:transformerFactory <' + transformerFactoryURI + '>; '
-							+ descriptionProp
-							+ 'dcterms:title "' + title + '"@en . ';
+				var data = '@prefix dcterms: <http://purl.org/dc/terms/> . '
+								+ '@prefix tfrldpc: <http://vocab.fusepool.info/tfrldpc#> . '
+								+ '@prefix ldp: <http://www.w3.org/ns/ldp#> . '
+								+ '<> a ldp:Container, ldp:BasicContainer, tfrldpc:TransformerFactoryRegistration; '
+								+ 'tfrldpc:transformerFactory <' + transformerFactoryURI + '>; '
+								+ descriptionProp
+								+ 'dcterms:title "' + title + '"@en . ';
 
-			$.ajax({
-					type: 'POST',
-					headers: { 'Content-Type': 'text/turtle' },
-					url: main.URI,
-					data: data,
-					async: true
-			}).done(function (response) {
-				resolve(true);
-			}).fail(function (xhr, textStatus, errorThrown) {
-				reject(Error("error " + xhr.status));
-			});
+				$.ajax({
+						type: 'POST',
+						headers: { 'Content-Type': 'text/turtle' },
+						url: main.URI,
+						data: data,
+						async: true
+				}).done(function (response) {
+					resolve(true);
+				}).fail(function (xhr, textStatus, errorThrown) {
+					reject(Error("error " + xhr.status));
+				});
+			}
+			else {
+					reject(Error("Invalid Transformer Factory Registry."));
+			}
 		});
 	};
 
 	var main = this;
   return new Promise(function (resolve, reject) {
 		
-		var ajaxRequest = jQuery.ajax({type: "GET", url: platformURI, async: true});
+		var ajaxRequest = jQuery.ajax({ type: "GET", url: platformURI, async: true });
 		
 		ajaxRequest.done(function (response, textStatus, responseObj) {
 			var configStore = rdfstore.create();
@@ -123,26 +135,26 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 											"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
 											"PREFIX fp3: <http://vocab.fusepool.info/fp3#> " +
 											"SELECT * { " +
-											" ?s dcterms:title ?title . " +
-											" ?s rdfs:comment ?comment . " +
-											" ?s rdfs:label ?label . " +
-											" ?s fp3:sparqlEndpoint ?sparqlEndpoint . " +
-											" ?s fp3:userInteractionRequestRegistry ?userInteractionRequestRegistry . " +
-											" ?s fp3:transformerFactoryRegistry ?transformerFactoryRegistry . " +
-											" ?s fp3:transformerRegistry ?transformerRegistry . " +
-											" ?s fp3:dashboardConfigRegistry ?dashboardConfigRegistry . " +
+											" ?s dcterms:title ?title " +
+											" OPTIONAL { ?s rdfs:comment ?comment } " +
+											" OPTIONAL { ?s rdfs:label ?label } " +
+											" OPTIONAL { ?s fp3:sparqlEndpoint ?sparqlEndpoint } " +
+											" OPTIONAL { ?s fp3:userInteractionRequestRegistry ?userInteractionRequestRegistry } " +
+											" OPTIONAL { ?s fp3:transformerFactoryRegistry ?transformerFactoryRegistry } " +
+											" OPTIONAL { ?s fp3:transformerRegistry ?transformerRegistry } " +
+											" OPTIONAL { ?s fp3:dashboardConfigRegistry ?dashboardConfigRegistry } " +
 											"}";
 					
 					configStore.execute(query, function (success, res) {
 						if (success) {
 							var title = res[0].title.value;
-							var comment = res[0].comment.value;
-							var label = res[0].label.value;
-							var sparqlEndpoint = res[0].sparqlEndpoint.value;
-							var userInteractionRequestRegistry = res[0].userInteractionRequestRegistry.value;
-							var transformerFactoryRegistry = res[0].transformerFactoryRegistry.value;
-							var transformerRegistry = res[0].transformerRegistry.value;
-							var dashboardConfigRegistry = res[0].dashboardConfigRegistry.value;
+							var comment = (isEmpty(res[0].comment) ? "" : res[0].comment.value);
+							var label = (isEmpty(res[0].label) ? "" : res[0].label.value);
+							var sparqlEndpoint = (isEmpty(res[0].sparqlEndpoint) ? "" : res[0].sparqlEndpoint.value);
+							var userInteractionRequestRegistry = (isEmpty(res[0].userInteractionRequestRegistry) ? "" : res[0].userInteractionRequestRegistry.value);
+							var transformerFactoryRegistry = (isEmpty(res[0].transformerFactoryRegistry) ? "" : res[0].transformerFactoryRegistry.value);
+							var transformerRegistry = (isEmpty(res[0].transformerRegistry) ? "" : res[0].transformerRegistry.value);
+							var dashboardConfigRegistry = (isEmpty(res[0].dashboardConfigRegistry) ? "" : res[0].dashboardConfigRegistry.value);
 							
 							var transformerRegistryObj = new TransformerRegistry(transformerRegistry);
 							var transformerFactoryRegistryObj = new TransformerFactoryRegistry(transformerFactoryRegistry);
