@@ -8,11 +8,12 @@ function P3Platform() {
 P3Platform.prototype.getPlatform = function (platformURI) {
 
 	/* ************************* Platform ************************* */
-	function Platform(URI, title, comment, label, sparqlEndpoint, userInteractionRequestRegistry, transformerFactoryRegistry, transformerRegistry, dashboardConfigRegistry) {
+	function Platform(URI, title, comment, label, ldpRoot, sparqlEndpoint, userInteractionRequestRegistry, transformerFactoryRegistry, transformerRegistry, dashboardConfigRegistry) {
 		this.URI = URI;
 		this.title = title;
 		this.comment = comment;
 		this.label = label;
+		this.ldpRoot = ldpRoot;
 		this.sparqlEndpoint = sparqlEndpoint;
 		this.userInteractionRequestRegistry = userInteractionRequestRegistry;
 		this.transformerFactoryRegistry = transformerFactoryRegistry;
@@ -20,6 +21,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 		this.dashboardConfigRegistry = dashboardConfigRegistry;
 	}
 	Platform.prototype.getPlatformURI = function () { return this.URI; };
+	Platform.prototype.getLdpRoot = function () { return this.ldpRoot; };
 	Platform.prototype.getSparqlEndpoint = function () { return this.sparqlEndpoint; };
 	Platform.prototype.getUserInteractionRequestRegistryURI = function () { return this.userInteractionRequestRegistry; };
 	Platform.prototype.getTransformerFactoryRegistry = function () {
@@ -138,6 +140,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 											" ?s dcterms:title ?title " +
 											" OPTIONAL { ?s rdfs:comment ?comment } " +
 											" OPTIONAL { ?s rdfs:label ?label } " +
+											" OPTIONAL { ?s fp3:ldpRoot ?ldpRoot } " +
 											" OPTIONAL { ?s fp3:sparqlEndpoint ?sparqlEndpoint } " +
 											" OPTIONAL { ?s fp3:userInteractionRequestRegistry ?userInteractionRequestRegistry } " +
 											" OPTIONAL { ?s fp3:transformerFactoryRegistry ?transformerFactoryRegistry } " +
@@ -150,6 +153,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							var title = res[0].title.value;
 							var comment = (isEmpty(res[0].comment) ? "" : res[0].comment.value);
 							var label = (isEmpty(res[0].label) ? "" : res[0].label.value);
+							var ldpRoot = (isEmpty(res[0].ldpRoot) ? "" : res[0].ldpRoot.value);
 							var sparqlEndpoint = (isEmpty(res[0].sparqlEndpoint) ? "" : res[0].sparqlEndpoint.value);
 							var userInteractionRequestRegistry = (isEmpty(res[0].userInteractionRequestRegistry) ? "" : res[0].userInteractionRequestRegistry.value);
 							var transformerFactoryRegistry = (isEmpty(res[0].transformerFactoryRegistry) ? "" : res[0].transformerFactoryRegistry.value);
@@ -159,7 +163,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 							var transformerRegistryObj = new TransformerRegistry(transformerRegistry);
 							var transformerFactoryRegistryObj = new TransformerFactoryRegistry(transformerFactoryRegistry);
 							
-							var platform = new Platform(platformURI, title, comment, label, sparqlEndpoint,
+							var platform = new Platform(platformURI, title, comment, label, ldpRoot, sparqlEndpoint,
 																				userInteractionRequestRegistry, transformerFactoryRegistryObj,
 																				transformerRegistryObj, dashboardConfigRegistry);
 							
