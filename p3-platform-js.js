@@ -131,7 +131,7 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 			var configStore = rdfstore.create();
 			configStore.load('text/turtle', response, function (success) {
 				if (success) {
-					var query = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
+					var query = "PREFIX dcterms: <http://purl.org/dc/elements/1.1/> " +
 											"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " +
 											"PREFIX fp3: <http://vocab.fusepool.info/fp3#> " +
 											"SELECT * { " +
