@@ -179,6 +179,13 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 			reject(Error("error " + responseObj.status));
 		});
 	});
+	
+	function isEmpty(data) {
+		if (typeof data === 'undefined' || data === '' || data === null || data.length == 0) {
+			return true;
+		}
+		return false;
+	}
 };
 
 var P3Platform = new P3Platform();
