@@ -163,7 +163,6 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 				resolve(platform);
 			 
 			});
-			return;
 		});
 		ajaxRequest.fail(function (responseObj, textStatus, response) {
 			reject(Error("error " + responseObj.status));
