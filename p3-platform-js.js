@@ -133,7 +133,9 @@ P3Platform.prototype.getPlatform = function (platformURI) {
 	var main = this;	
 	return new Promise(function (resolve, reject) {
 		
-		var ajaxRequest = jQuery.ajax({ type: "GET", url: platformURI, async: true });
+		var ajaxRequest = jQuery.ajax({ type: "GET", url: platformURI, headers: {
+                              'Accept': 'text/turtle'
+    			}, async: true });
 		
 		ajaxRequest.done(function (response, textStatus, responseObj) {
 			rdf.parseTurtle(response, function (s, graph) {
